@@ -32,7 +32,14 @@ main.php,admin_add_products.php,admin_cat.php,admin_pro.php,Adminheader.php,cart
 12. elements.php: This page hold some common elents that are used in admin page as well in customer page. this page i written in order to avoid redeclation of elements. i am      passing the account type as a parameter to this elements so that it can react accordingly.Like wheather to display an element on to admin page or customer page.
 13. operations.php: All the operations that are been performed in entier project are handled over here.
 
-# Common pages used and there usage:
+# Common pages used and their usage:
 * elements.php:This page holds products,Category list,Search product These three elemnets are common for admin and customer. it takes a seperate value acc_type which is           account type and depends on the value its prepares the elements and passes to the calling function this function then places the element on that page. 
 * functions.js: This page contains all the funtions that are used by other pages and some functions takes the parameter and according to that parameter performs operation.
 * operations.php: This page takes all the values which are being posted and helps to update our data base based on the values recived.
+
+# Update:
+* I have included user profile Update, Reset password,Quantity in cart and few indication updates.
+1. Profile Update: User can change their details such as name,password,address,email id,phone number.
+2. Reset Passdword uses email id and a new randome generated password is sent to registered mail.
+3. Indication Updates such as loading animation and confirmation on removing a element.
+4. Quantity : After users adds items to the cart, in cart they have a option to select the quantity of product. accordingly amount is being calculated.
