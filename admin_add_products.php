@@ -22,7 +22,7 @@ if(!isset($_SESSION['admin_email']))header("location:login.php");
       </style>
 
 
-    <title>Login</title>
+    <title>Add Products</title>
   </head>
   <body onload="load_cat();">
      <?php include "Adminheader.php" ;?>

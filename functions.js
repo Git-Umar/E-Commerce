@@ -1,17 +1,64 @@
    var email_exist=false;
    var pass_match=true;
-   
+   var del_="";
+   function del_element(){
+       remove_pro(del_,'admin');
+       del_="";
+       hide_div('cnf_del');
+       show_div('products');
+   }
+   function show_div(id_val){
+       hide_div("cnf_del");
+       var con="#"+id_val;
+       $(con).show();
+   }
+   function redirect_to_product(pro_s_val){
+       var dataString="id=id &pro_id="+pro_s_val;
+        $.ajax({
+              url:'product.php',
+              type:'POST',
+              data:dataString,
+        });
+        window.location.href="product.php";
+   }
+   function hide_div(id_val){
+       var con="#"+id_val;
+       $(con).hide();
+   }
    function if_ok(){
        if(!email_exist && pass_match)
             post_values();
    }
-    function post_values(){
+   function forgot_pass(){
+       $('#login_form').hide();
+       $('#forgot_pass').show();
+       
+   }
+   function reset_pass(){
+        var email=document.getElementById("email").value;
+        if(isEmpty(email))alert("Email Required");
+        else{
+        var dataString="send=send &email="+email;
+        $.ajax({
+              url:'operations.php',
+              type:'POST',
+              data:dataString,
+              success:function(data_c){
+                  if(data_c !="mail_sent")$('#err_').html(' <div class="alert alert-danger text-center" role="alert"> '+data_c+'</div>');
+                  else window.location.href="login.php";
+              } 
+            
+        });
+        }
+   }
+   function post_values(){
         var name=document.getElementById("name").value;
         var email=document.getElementById("email_id").value;
         var phone=document.getElementById("mob").value;
         var pass=document.getElementById("pass").value;
         var c_pass=document.getElementById("c_pass").value;
         var address=document.getElementById("address").value;
+        if(!isEmpty(name) && !isEmpty(email) && !isEmpty(phone) && !isEmpty(pass) && !isEmpty(address)){
         var dataString="reg=reg &name="+name+" &email="+email+" &phone="+phone+" &pass="+pass+" &address="+address;
          var err=' <div class="alert alert-danger text-center" role="alert"> ERROR IN SUBMITION </div>';
         $.ajax({
@@ -22,17 +69,31 @@
                   if(data_c == "inserted")location.href = "index.php";
                   else $('#err').html(err);
         }
-        })
+        });
+    }
+    else err_msg("Please Fill All The Details");
     }
     
     
-    
+    function loading_anim(){
+        var dataString="loading=loading";
+            $.ajax({
+                url:'elements.php',
+                type:'GET',
+                data:dataString,
+                success:function(data_c){
+                    $('#products').html(data_c);
+                  }
+            });
+    }
     
     function custom_elements(){
+            loading_anim();
             load_cat();
             put_products("all","custom");
     }
     function all_elements(){
+            loading_anim();
             load_cat();
             put_products("all","admin");
         }
@@ -56,15 +117,31 @@
                   type:'GET',
                   data:dataString,
                   success:function(data_c){
-                    $('#products').html(data_c)
+                    $('#products').html(data_c);
+                  }
+            });
+        }
+        function ask_conformation(del_conf){
+            del_ = del_conf;
+            hide_div("products");
+            show_div("cnf_del");
+            var dataString="conformation=conformation";
+            $.ajax({
+                url:'elements.php',
+                  type:'GET',
+                  data:dataString,
+                  success:function(data_c){
+                        $('#cnf_del').html(data_c);
                   }
             });
         }
         function pass_value(acc_type) {
+            loading_anim();
             var element_val=document.getElementById("category").value;
             put_products(element_val,acc_type);
         }
         function search_item(acc_type){
+            loading_anim();
             var search_item_value=document.getElementById("product_val").value;
             var dataString="search_pro=search_pro &item_name="+search_item_value+" &acc_type="+acc_type;
             if(!isEmpty(search_item_value)){
@@ -73,10 +150,37 @@
                   type:'GET',
                   data:dataString,
                   success:function(data_c){
-                    $('#products').html(data_c)
+                    $('#products').html(data_c);
                   }
             });
             }
+            else put_products("all",acc_type);
+        }
+        function deduct(id_val,amount){
+            var qunant_value=parseInt(document.getElementById(id_val).value);
+            if(qunant_value !=1 && qunant_value >1){
+                    amount=parseInt(amount);
+                    var total_amount=document.getElementById("total_hf").value;
+                    qunant_value -=1;
+                    var total=total_amount-amount;
+                    document.getElementById(id_val).value=qunant_value;
+                    document.getElementById("total_hf").value=total;
+                    document.getElementById("total").value=total;
+                    $('#total_pro_amount').html("Rs."+total);
+            }
+        }
+        function increment(id_val,amount){
+            var qunant_value=parseInt(document.getElementById(id_val).value);
+            amount=parseInt(amount);
+            var present_amount=qunant_value*amount;
+            var total_amount=document.getElementById("total_hf").value;
+            var cal_inc=total_amount-present_amount;
+            qunant_value +=1;
+            var total=cal_inc+(qunant_value*amount);
+            document.getElementById(id_val).value=qunant_value;
+            document.getElementById("total_hf").value=total;
+            document.getElementById("total").value=total;
+            $('#total_pro_amount').html("Rs."+total);
         }
         function add_to_cart(cart_item){
             var dataString="cart_pro=cart_pro &cart_item="+cart_item;
@@ -90,6 +194,7 @@
             });
         }
         function load_cart(){
+            loading_anim();
             var dataString='get_cart=get_cart';
             $.ajax({
                 url:'elements.php',
@@ -123,7 +228,7 @@
               data:dataString,
               success:function(data_c){
                   if(data_c == "error"){
-                      $('#err').html(error)
+                      $('#err').html(error);
                   }
                   else if(data_c == "admin"){
                       window.location.href="admin_pro.php";
@@ -132,7 +237,7 @@
                       window.location.href="main.php";
                   }
         }
-        })
+        });
        }
        
     function email_check(){
@@ -145,11 +250,11 @@
               data:dataString,
               success:function(data_c){
                   if(data_c == "exist"){
-                       $('#email_error').html("Email Already Exist!")
+                       $('#email_error').html("Email Already Exist!");
                        email_exist=true;
                   }
                   else{
-                      $('#email_error').html('')
+                      $('#email_error').html('');
                       email_exist=false;
                   }
         }
@@ -260,4 +365,49 @@
             }
             else err_msg("Empty Filed Found");
         }
+        function auth_update(){
+        var ok=true;
+        var name=document.getElementById("uname").value;
+        var mobile=document.getElementById("uphone").value;
+        var email=document.getElementById("uemail").value;
+        var address=document.getElementById("address").value;
+        var cpass=document.getElementById("ppass").value;
+        var npass=document.getElementById("pass").value;
+        var cnf_pass=document.getElementById("cpass").value;
+            if(isEmpty(name) || isEmpty(mobile)|| isEmpty(email)|| isEmpty(address)){
+                ok=false;
+                alert("Please Fill The Requiered Fields");
+            }
+            else if(isEmpty(cpass)){
+                alert("Current Password Can Not Be Empty");
+                ok=false;
+            }
+            else if(!isEmpty(npass) && isEmpty(cnf_pass)){
+                ok=false;
+                alert("Please Conform Your Password");
+            }
+            else if(isEmpty(npass) && !isEmpty(cnf_pass)){
+                ok=false;
+                alert("Please Enter Your New Password");
+            }
+            else if(!isEmpty(npass) && !isEmpty(cnf_pass) && cnf_pass != npass){
+                ok=false;
+                alert("Conform Password And New Password Does Not Match");
+            }
+            if(ok){
+                var dataString="update_profile=update_profile &uname="+name+" &uphone="+mobile+" &uemail="+email+" &uaddress="+address+" &upass="+cpass+" &unpass="+npass;
+                $.ajax({
+                  url:'operations.php',
+                  type:'POST',
+                  data:dataString,
+                  success:function(data_c){
+                      if(data_c == "pass_missmatch")alert("Current Password Error");
+                      else if(data_c == "updated"){alert("Updated! Please Login Again");
+                          window.location.href='logout.php';
+                      }
+                    
+                  } 
+            });
+            }
+    }
         

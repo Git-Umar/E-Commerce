@@ -14,8 +14,11 @@
         {
             font-family: 'Roboto Mono', monospace;
         }
-              
-
+        .zoom:hover {
+          -ms-transform: scale(1.1);
+          -webkit-transform: scale(1.1);
+          transform: scale(1.1); 
+        }      
       </style>
 
 
@@ -51,7 +54,7 @@
                          <div class="col">
                              <div class="form-group"> 
                                  <label for="product">Product Name</label>
-                                             <input name="product_val" id="product_val" class="form-control" placeholder="search by product name">
+                                             <input name="product_val" id="product_val" class="form-control" placeholder="Product Name!">
                              </div>
                          </div>
                              <div class=" col text-center" style="margin-top:2em">
@@ -61,8 +64,7 @@
                     </form>
             </div>
             </div>
-          <div id="products">
-          </div>
+          <div id="products"></div>
       </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

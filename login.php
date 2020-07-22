@@ -43,16 +43,14 @@ if(isset($_SESSION["email"]))header("location:main.php");
           text-decoration: underline;
         }
     </style> 
-     
-
     <title>Login</title>
   </head>
-  <body>
+  <body onload="hide_div('forgot_pass');">
      <?php include "header.php" ;
         session_start();
      ?>
         <div class="container" style="margin-top:4rem"  >
-         
+         <div id="login_form">
             <div class="row justify-content-center" > 
 
                   <div class="col text-center"> 
@@ -67,12 +65,8 @@ if(isset($_SESSION["email"]))header("location:main.php");
                                 <?php } ?>
                         </pre>
                   </div>
-
             </div>
-        
-  
             <div class="row justify-content-center">
-           
                 <div class=" col-12 col-md-6 justify-content-center" >
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <form >
@@ -87,14 +81,46 @@ if(isset($_SESSION["email"]))header("location:main.php");
                                           </div>
                                         <div class="text-center">
                                              <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="auth();">Log On</button>
+                                             <button class="btn btn-outline-success " name="submit_forgot" id="submit_forgot" type="button" onclick="forgot_pass();">Reset Password</button>
                                               <a href="register.php"><p>Create an Account !</p></a>
                                         </div>
-                                       
-                            
- 
                         </form>
                     </div>
                 </div>         
+            </div>
+            </div>
+            <div id="forgot_pass">
+                <div class="row justify-content-center" > 
+
+                  <div class="col text-center"> 
+                  <h3 style="margin:40px;text-align:center;" >Reset Password</h3>
+                        <pre id="err_">
+                                <?php
+                                  if(isset($_SESSION["suc"])){
+                                  ?>
+                                  <div class="alert alert-success" role="alert">
+                                       <center> <?php echo $_SESSION["suc"]; unset($_SESSION["suc"]); ?></center>
+                                </div>
+                                <?php } ?>
+                        </pre>
+                  </div>
+            </div>
+            <div class="row justify-content-center">
+           
+                <div class=" col-12 col-md-6 justify-content-center" >
+                    <div class="shadow p-3 mb-5 bg-white rounded">
+                        <form >
+                                          <div class="form-group"> 
+                                            <label for="id">Email Id</label>
+                                            <input type="email" class="form-control" id="email" name="email" >
+                                          </div>
+                                        <div class="text-center">
+                                             <button class="btn btn-outline-success " name="submit_reset" id="submit_reset" type="button" onclick="reset_pass();">Send Password</button>
+                                        </div>
+                        </form>
+                    </div>
+                </div>         
+            </div>
             </div>
       </div>
     <!-- Optional JavaScript -->

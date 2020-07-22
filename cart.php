@@ -11,18 +11,12 @@ session_start();
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        
-   
           <style>
                  *
         {
             font-family: 'Roboto Mono', monospace;
         }
-              
-
       </style>
-
-
     <title>My Cart</title>
   </head>
   <body onload="load_cart();">
@@ -34,6 +28,7 @@ session_start();
                   </div>
             </div>
             <div id="cart">
+                <div id="products"></div>
             </div>
       </div>
    

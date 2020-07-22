@@ -1,6 +1,45 @@
 <?php
 session_start();
 include 'connection.php';
+if(isset($_POST["update_profile"])){
+    $cemail=$_SESSION["email"];
+    $uname=trim($_POST["uname"]," ");
+    $uphone=trim($_POST["uphone"]," ");
+    $uemail=trim($_POST["uemail"]," ");
+    $address=trim($_POST["uaddress"]," ");
+    $upass=md5(trim($_POST["upass"]," "));
+    $unpass=md5(trim($_POST["unpass"]," "));
+    if(empty(trim($_POST["unpass"]," ")))$unpass=$upass;
+    if(mysqli_num_rows(mysqli_query($conn,"select email from ecom_users where email='$cemail' and pass='$upass'"))==0)echo "pass_missmatch";
+    else{
+        $up_usp="UPDATE ecom_users SET name = '$uname',email= '$uemail',phone_num = '$uphone',address = '$address',pass = '$unpass'  WHERE email = '$cemail' ";
+        if(mysqli_query($conn,$up_usp)){
+            mysqli_query($conn,"UPDATE ecom_cart SET email='$uemail' WHERE email='$cemail'");
+            mysqli_query($conn,"UPDATE ecom_orders SET email='$uemail' WHERE email='$cemail'");
+            echo "updated";
+        }
+        else echo "error";
+    }
+}
+if(isset($_POST["send"])){
+    $email=trim($_POST["email"]," ");
+    $stmt="select * from ecom_users where email ='$email'";
+    $idresult = mysqli_query($conn, $stmt);
+    $idrow = mysqli_fetch_array($idresult);
+    if($email===$idrow["email"]){
+        $new=rand();
+        $subject="Password Update";
+        $sender_email = "mohdumar2222@gmail.com";
+        $comment = "Your Password reset sucsessful your new pass:$new";
+        mail($email, "$subject", $comment, "From:" . $sender_email);
+        $new=md5($new);
+        $update="UPDATE ecom_users SET pass='$new' WHERE email='$email'";
+            if(mysqli_query($conn, $update)){echo"mail_sent";
+                $_SESSION["suc"]="For New Password Please Check Your Mail";
+            }
+    }
+    else echo "Error Please Check Your Email Id";
+}
     if(isset($_POST["reg"])){
         $name=trim($_POST["name"]," ");
         $email=trim($_POST["email"]," ");
@@ -9,6 +48,7 @@ include 'connection.php';
         $address=trim($_POST["address"]," ");
         $insert_val="insert into ecom_users values('$name','$email','$phone','$address','$pass','customer')";
         mysqli_query($conn,"INSERT INTO ecom_cart (email, items) VALUES ('$email', '')");
+        mysqli_query($conn,"INSERT INTO ecom_orders (email, product) VALUES ('$email', '')");
         if(mysqli_query($conn,$insert_val)){
             $_SESSION["suc"]="YOUR ACCOUNT HAS BEEN CREATED YOU CAN LOGIN!";
             echo "inserted";

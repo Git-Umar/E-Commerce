@@ -12,12 +12,16 @@ if(!isset($_POST["checkout"]))header("location:main.php");
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-       
+        
+   
           <style>
                  *
         {
             font-family: 'Roboto Mono', monospace;
-        } 
+        }
+            
+                    
+ 
             a
          {
              color: black;
@@ -55,12 +59,18 @@ if(!isset($_POST["checkout"]))header("location:main.php");
   <body>
      <?php include "header.php" ;?>
         <div class="container-fluid  "  style="margin-top:4rem;" >
+            
+         
             <div class="row justify-content-center" > 
 
                   <div class="col text-center"> 
 
                         <h1 style="margin:40px;text-align:center;" >Check Out</h1>
+                      
+
+
                   </div>
+
             </div>
              <div class="shadow p-1 mb-5 bg-white rounded mx-auto" style="width:80%">
             <div class="row mx-auto  text-center p-2" style="">
@@ -78,7 +88,7 @@ if(!isset($_POST["checkout"]))header("location:main.php");
                              <b><?php echo $db_val["name"];?></b> <span>Rs.<?php echo $db_val["cost"];?></span>
                            </li>
                            <?php
-                                }
+                                    }
                                 }
                            ?>
                           </ol>
@@ -99,7 +109,9 @@ if(!isset($_POST["checkout"]))header("location:main.php");
                          <dl>
                               <?php echo $_SESSION["address"];?>
                          </dl>
+
                      </address>
+
                     </div>
                     <div class="col-12 col-md-6 ">
                     <div class="row text-right">
@@ -110,22 +122,40 @@ if(!isset($_POST["checkout"]))header("location:main.php");
                          <dl>
                           Rs.<?php echo $_POST["total"];?>
                          </dl>
-                    </div>                      
+
+                    </div>
+
+                      
                     </div>
                     </div>    
                 </div>
             </div>
+            
             <div class="row mx-auto text-center rounded"   >
                 <div class="col-12 col-md-6 p-1 mx-auto" style="font-size:1em;background-color:green;color:white" >
                     <p>Successfully Shipped .Thank you for Shopping..!!</p>
+                
                 </div>
+                
+            
             </div>
              <div class="row mx-auto text-center mt-4 "  style="" >
                 <div class="col col-md-4 p-4 mx-auto" >
                     <a href="main.php"  style="font-size:1em;border-radius:2em;border:1px solid black;padding:1em">Shop again..!</a>
-                </div>           
+                
+                </div>
+                
+            
             </div>
+ 
+          
         </div>
+            
+    
+   
+
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

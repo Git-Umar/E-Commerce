@@ -8,7 +8,7 @@ if(isset($_GET["cat_show"])){
 ?>
         <div class="form-group"> 
                 <label for="category">Category</label>
-            <select name="category" class="form-control" id="category">
+            <select name="category" class="form-control" id="category" onchange="pass_value('custom');">
                 <option value="<?php echo "";?>"><?php echo "Select Category";?></option>
                 <?php
                 while($num = mysqli_fetch_array($cat_result)){  
@@ -21,6 +21,43 @@ if(isset($_GET["cat_show"])){
           </div>
 <?php
 }
+if(isset($_GET["conformation"])){
+?>
+<div class="row mx-auto p-3  justify-content-center">
+    <div class="col-12 col-md-8 mx-auto ">
+         <div  class="shadow p-3 mb-5 bg-white rounded mx-auto" style="">
+          <div class="row  p-2">
+               <div class="col mx-auto text-center">
+                    <p>  Do You Want To delete Selected Element! </p>
+               </div>
+           </div>
+                <div class="row justify-content-around  p-2">
+                    <div class="col-6 mx-auto  text-center">
+                        <button class="btn btn-outline-dark " name="submit" id="submit" type="button" onclick="show_div('products');">Cancel</button>
+                    </div>
+                    <div class="col-6 mx-auto  text-center">
+                        <button class="btn btn-outline-danger " name="submit" id="submit" type="button" onclick="del_element();">Delete</button>
+                    </div>
+                </div>
+               
+        
+    </div>
+         
+            </div>
+      
+        </div>
+<?php
+}
+if(isset($_GET["loading"])){
+?>
+            <center>
+            <div class="spinner-border" style="width: 6rem; height: 6rem;" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            </center>
+           <center>Loading.....</center>
+<?php
+}
 if(isset($_GET["show_pro"])){
                 $s_v=trim($_GET["cat_"]," ");
                 $acc_type=trim($_GET["acc_type"]," ");
@@ -29,7 +66,6 @@ if(isset($_GET["show_pro"])){
                 $cat_result=mysqli_query($conn,$list_cat);
                 while($cat=mysqli_fetch_array($cat_result)){
 ?>
-                
             <div class="row">
                 <div class="col" style="padding:0.5em;margin-left:2em">
                     
@@ -45,8 +81,10 @@ if(isset($_GET["show_pro"])){
                     $get_products_result=mysqli_query($conn,$get_products);
                         while($pro_item=mysqli_fetch_array($get_products_result)){
                 ?>
+                
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="margin-top:20px;margin-bottom:20px">
                         <div  style="padding:1em">
+                            <div class="zoom">
                                     <div class="shadow p-3 mb-5 bg-white rounded">
                                  <div style="text-align:center">
                                         <?php
@@ -57,7 +95,7 @@ if(isset($_GET["show_pro"])){
                                         <h6 class="card-title"><?php echo $pro_item["name"];?></h6>
                                         <p>Rs.<?php echo $pro_item["cost"];?></p>
                                         <p><?php echo $pro_item["description"];?></p>
- <?php if($acc_type=="admin"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="remove_pro(<?php echo $pro_item["sno"];?>,'admin')" style="font-size:1em" >Remove product</button> <?php
+ <?php if($acc_type=="admin"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="ask_conformation(<?php echo $pro_item["sno"];?>);" style="font-size:1em" >Remove product</button> <?php
                                             }
           else if($acc_type=="custom"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="add_to_cart(<?php echo $pro_item["sno"];?>)" style="font-size:1em" >Add To Cart</button>
                                         <?php
@@ -65,8 +103,9 @@ if(isset($_GET["show_pro"])){
                                         ?>
                                 </div>
                         </div>
+                        </div>
                        </div>
-                </div>     
+                </div>
                    <?php
                         }
                    ?>
@@ -90,6 +129,7 @@ if(isset($_GET["search_pro"])){
                 ?>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="margin-top:20px;margin-bottom:20px">
                         <div  style="padding:1em">
+                            <div class="zoom">
                                     <div class="shadow p-3 mb-5 bg-white rounded">
                                  <div style="text-align:center">
                                         <?php
@@ -100,13 +140,14 @@ if(isset($_GET["search_pro"])){
                                         <h6 class="card-title"><?php echo $pro_item["name"];?></h6>
                                         <p>Rs.<?php echo $pro_item["cost"];?></p>
                                         <p><?php echo $pro_item["description"];?></p>
-    <?php if($acc_type=="admin"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="remove_pro(<?php echo $pro_item["sno"];?>,'admin')" style="font-size:1em" >Remove product</button> <?php
+    <?php if($acc_type=="admin"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="ask_conformation(<?php echo $pro_item["sno"];?>);" style="font-size:1em" >Remove product</button> <?php
                                             }
           else if($acc_type=="custom"){ ?> <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="add_to_cart(<?php echo $pro_item["sno"];?>)" style="font-size:1em" >Add To Cart</button>
                                         <?php
                                             }
                                         ?>
                                 </div>
+                        </div>
                         </div>
                        </div>
                 </div>     
@@ -132,7 +173,7 @@ if(isset($_GET["search_pro"])){
 <?php
 if(isset($_GET["get_cart"])){
     $total=0;
-            foreach($_SESSION["cart_elements"] as $item){
+        foreach($_SESSION["cart_elements"] as $item){
                 if($item !=""){
                 $cart_query="select * from ecom_products where sno='$item'";
                 $cart_item_data=mysqli_fetch_array(mysqli_query($conn,$cart_query));
@@ -154,7 +195,7 @@ if(isset($_GET["get_cart"])){
                         </div>
                         <div class="row">
                              <div class="col" style="font-size:.8em">
-                                  <p>Rs.<?php echo $cart_item_data["cost"]; $total +=$cart_item_data["cost"];?></p>
+                                  <p>Rs.<?php echo $cart_item_data["cost"]; $total += $cart_item_data["cost"];?></p>
                             </div>
                             </div>
                           <div class="row">
@@ -164,37 +205,55 @@ if(isset($_GET["get_cart"])){
                             </div>
                 </div>   
                  <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="margin:.5em; text-align:center">
+                     <div class="row p-1 text-center ">
+                         <div class="col-8  mx-auto">
+                        <div class="input-group">
+                              <div class="input-group-prepend">
+                                     <button class="btn btn-outline-secondary" type="button" onclick="deduct('quantity_<?php echo $cart_item_data["sno"];?>','<?php echo $cart_item_data["cost"];?>')"> - </button>
+                              </div>
+                                    <input type="number" class="form-control" min="1" id="quantity_<?php echo $cart_item_data["sno"];?>" readonly value="1">
+                              <div class="input-group-append" id="button-addon4">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="increment('quantity_<?php echo $cart_item_data["sno"];?>','<?php echo $cart_item_data["cost"];?>')"> + </button>
+                              </div>
+                            </div>
+                         </div>
+                     </div>
+                           <div class="row p-1 ">
+                         <div class="col">
                      <button class="btn btn-outline-success " name="submit" id="submit" type="button" onclick="remove_element_from_cart(<?php echo $cart_item_data["sno"];?>);" style="font-size:1em" >Remove product</button>
-                </div>
+                    </div>
+                         </div>
+                     </div>
             </div>
             </div>
             <?php
             }
 }
+?>
+        <input type="hidden" id="total_hf" name="total_hf" value="<?php echo $total;?>"/>
+<?php
 if($total !=0 && isset($_SESSION["address"])){
 ?>
             <div class="shadow p-1 mb-5 bg-white rounded mx-auto" style="width:80%">
             <div class="row align-items-center mx-auto p-4 " >
                 <div class="col-12 col-md-6" >
-                 <address>
-                     <dt>
+                 <p><b>
                      Shipping Address
-                     </dt>
-                     <dl>
+                </b></p>
+                <p>
                           <?php echo $_SESSION["address"];?>
-                     </dl>
-                 </address>
+                 </p>   
                 </div>
                 <div class="col-12 col-md-6 ">
                 <div class="row text-right">
                      <div class="col-12  ">
-                     <dt>
-                      Total
-                     </dt>
-                     <dl>
-                      Rs.<?php echo $total; ?>
-                     </dl>
-                </div>
+                         <p><b>
+                          Total
+                         </b></p>
+                         <p id="total_pro_amount">
+                          Rs.<?php echo $total;?>
+                         </p>
+                    </div>
                    <div class="col-12">
                        <form action="check.php" method="post">
                         <button class="btn btn-outline-success " name="checkout" id="checkout" type="submit" style="font-size:1em" >Check out</button>
